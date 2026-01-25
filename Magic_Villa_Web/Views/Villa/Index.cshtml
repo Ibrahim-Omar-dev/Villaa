@@ -58,14 +58,14 @@
                             </td>
                             <td class="align-middle">
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <a asp-action="Details" asp-route-name="@villa.Name" class="btn btn-outline-info" title="View Details">
-                                        <i class="bi bi-eye"></i>
+                                    <a asp-action="Details" asp-route-id="@villa.Id" class="btn btn-outline-info" title="View Details">
+                                        <i class="bi bi-info-circle"></i>
                                     </a>
-                                    <a asp-action="Edit" asp-route-name="@villa.Name" class="btn btn-outline-warning" title="Edit">
-                                        <i class="bi bi-pencil"></i>
+                                    <a asp-action="Update" asp-route-id="@villa.Id" class="btn btn-outline-warning" title="Edit">
+                                        <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a asp-action="Delete" asp-route-name="@villa.Name" class="btn btn-outline-danger" title="Delete">
-                                        <i class="bi bi-trash"></i>
+                                    <a asp-action="Delete" asp-route-id="@villa.Id" class="btn btn-outline-danger" title="Delete">
+                                        <i class="bi bi-trash3"></i>
                                     </a>
                                 </div>
                             </td>

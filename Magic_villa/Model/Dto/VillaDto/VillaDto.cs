@@ -4,6 +4,7 @@ namespace Magic_villa.Model.Dto.VillaDto
 {
     public class VillaDto
     {
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         public string Details { get; set; }

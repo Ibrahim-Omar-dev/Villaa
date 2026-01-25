@@ -28,7 +28,7 @@ namespace Magic_Villa_Web.Services
             return SendAsync<T>(new ApiRequest
             {
                 ApiType = ApiType.DELETE,
-                Url = VillaUrl + "/api/Villa/" + id
+                Url =$"{VillaUrl}/api/Villa/{id}" 
             });
         }
 
@@ -47,10 +47,9 @@ namespace Magic_Villa_Web.Services
             return SendAsync<T>(new ApiRequest
             {
                 ApiType = ApiType.GET,
-                Url = VillaUrl + "/api/Villa/" + id
+                Url = $"{VillaUrl.TrimEnd('/')}/api/Villa/{id}" 
             });
         }
-
         public Task<T> UpdateAsync<T>(VillaUpdateDto villaUpdateDto)
         {
             return SendAsync<T>(new ApiRequest

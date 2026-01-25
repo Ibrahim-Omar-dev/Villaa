@@ -5,6 +5,8 @@ namespace Magic_Villa_Web.Models.Dto.VillaDto
     public class VillaDto
     {
         [Required]
+        public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
         public string Details { get; set; }
         public string ImageUrl { get; set; }

@@ -5,6 +5,18 @@ using System.Text;
 using System.Text.Json;
 using static Utility.SD;
 
+//This BaseServices class is a generic HTTP service used to send API requests (GET, POST, PUT, DELETE) to an external API.
+//What it does:
+//Uses IHttpClientFactory to create an HttpClient
+//Builds an HTTP request based on:
+//URL
+//HTTP method(GET / POST / PUT / DELETE)
+//Optional request body (JSON)
+//Sends the request to the API
+//Reads the response and converts (deserializes) it into a generic type T
+//If an error happens, it returns a failed ApiResponse instead of crashing
+//It’s a reusable service that handles calling APIs and returning typed responses in one place.
+
 namespace Magic_Villa_Web.Services
 {
     public class BaseServices : IBaseServices
