@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
-using Magic_villa.Data;
+﻿using AutoMapper;
 using Magic_villa.Model;
 using Magic_villa.Model.Dto.VillaDto;
 using Magic_villa.Repository.IRepository;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace Magic_villa.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class VillaController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -32,6 +27,8 @@ namespace Magic_villa.Controllers
         }
 
         [HttpGet]
+        //[Authorize]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse>> GetVillas()
         {
@@ -54,7 +51,7 @@ namespace Magic_villa.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "GetVilla")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

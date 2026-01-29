@@ -1,0 +1,59 @@
+﻿@model Magic_Villa_Web.Model.ViewModel.VillaNumberCreateVM
+
+@{
+    ViewData["Title"] = "Create Villa Number";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-plus-circle"></i> Create Villa Number
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="villaNumber.VillaNum" class="form-label fw-bold">Villa Number</label>
+                                <input asp-for="villaNumber.VillaNum" class="form-control" placeholder="Enter villa number" />
+                                <span asp-validation-for="villaNumber.VillaNum" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="villaNumber.VillaId" class="form-label fw-bold">Select Villa</label>
+                                <select asp-for="villaNumber.VillaId" asp-items="@Model.VillaList" class="form-select">
+                                    <option value="">-- Select Villa --</option>
+                                </select>
+                                <span asp-validation-for="villaNumber.VillaId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="villaNumber.SpecialDetails" class="form-label fw-bold">Special Details</label>
+                            <textarea asp-for="villaNumber.SpecialDetails" class="form-control" rows="4" placeholder="Enter special details about this villa number"></textarea>
+                            <span asp-validation-for="villaNumber.SpecialDetails" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-circle"></i> Create
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

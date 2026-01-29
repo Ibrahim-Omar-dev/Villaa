@@ -5,50 +5,41 @@ using Magic_villa.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace Magic_villa.Controllers
+namespace Magic_villa.Controllers.V2
 {
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class VillaNumberController : ControllerBase
+    public class VillaNumberV2Controller : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<VillaNumberController> _logger;
+        private readonly ILogger<VillaNumberV2Controller> _logger;
 
-        public VillaNumberController(IUnitOfWork unitOfWork, IMapper mapper, ILogger<VillaNumberController> logger )
+        public VillaNumberV2Controller(IUnitOfWork unitOfWork, IMapper mapper, ILogger<VillaNumberV2Controller> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
         }
 
-        // GET: api/VillaNumber/getVillaNumber
-        [HttpGet("getVillaNumber")]
+
+        // GET: api/v2/VillaNumber/test - V2 specific endpoint
+        [HttpGet("test")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse>> GetAll()
+        public IActionResult GetTest()
         {
-            var response = new ApiResponse();
-            try
+            var response = new ApiResponse
             {
-                var villaNumbers = await _unitOfWork.VillaNumber.GetAll(includeProperty:"Villa");
-                response.Result = _mapper.Map<List<VillaNumberDto>>(villaNumbers);
-                response.IsSuccess = true;
-                response.StatusCodes = HttpStatusCode.OK;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "Failed to get all villa numbers");
-                response.IsSuccess = false;
-                response.StatusCodes = HttpStatusCode.InternalServerError;
-                response.ErrorMessage = ex.Message;
-                return StatusCode(StatusCodes.Status500InternalServerError, response);
-            }
+                IsSuccess = true,
+                StatusCodes = HttpStatusCode.OK,
+                Result = new { Message = "This is V2 API", Values = new string[] { "value1", "value2" } }
+            };
+            return Ok(response);
         }
-        // GET: api/VillaNumber/getVillaNumber/5
-        [HttpGet("getVillaNumber/{id:int}", Name = "GetVillaNumber")]
+
+        // GET: api/v2/VillaNumber/{id}
+        [HttpGet("{id:int}", Name = "GetVillaNumberV2")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -81,8 +72,8 @@ namespace Magic_villa.Controllers
             }
         }
 
-        // POST: api/VillaNumber/createVillaNumber
-        [HttpPost("createVillaNumber")]
+        // POST: api/v2/VillaNumber
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -136,7 +127,7 @@ namespace Magic_villa.Controllers
                 response.StatusCodes = HttpStatusCode.Created;
                 response.Result = _mapper.Map<VillaNumberDto>(entity);
 
-                return CreatedAtRoute("GetVillaNumber", new { id = entity.VillaNum }, response);
+                return CreatedAtRoute("GetVillaNumberV2", new { id = entity.VillaNum }, response);
             }
             catch (Exception ex)
             {
@@ -148,8 +139,8 @@ namespace Magic_villa.Controllers
             }
         }
 
-        // DELETE: api/VillaNumber/deleteVillaNumber/5
-        [HttpDelete("deleteVillaNumber/{id:int}")]
+        // DELETE: api/v2/VillaNumber/{id}
+        [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -172,7 +163,6 @@ namespace Magic_villa.Controllers
                 _unitOfWork.VillaNumber.Remove(villaNumber);
                 await _unitOfWork.Save();
 
-                // Standard practice: return 204 No Content for successful delete
                 return NoContent();
             }
             catch (Exception ex)
@@ -188,8 +178,8 @@ namespace Magic_villa.Controllers
             }
         }
 
-        // PUT: api/VillaNumber/updateVillaNumber/5
-        [HttpPut("updateVillaNumber/{id:int}")]
+        // PUT: api/v2/VillaNumber/{id}
+        [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

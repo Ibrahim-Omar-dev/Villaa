@@ -22,22 +22,36 @@ namespace Magic_villa.Repository
             await _dbSet.AddAsync(entity);
         }
 
-        public Task<T?> Get(Expression<Func<T, bool>> filter, bool track = true)
+        public Task<T?> Get(Expression<Func<T, bool>> filter, bool track = true, string? includeProperty = null)
         {
             IQueryable<T> query = _dbSet;
             if (!track)
             {
                 query = query.AsNoTracking();
             }
+            if (includeProperty != null)
+            {
+                foreach (var item in includeProperty.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(item);
+                }
+            }
             return query.FirstOrDefaultAsync(filter);
         }
-
-        public Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null)
+        //ex includeProperty : Villa , VillaSpecial
+        public Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperty=null)
         {
             IQueryable<T> query = _dbSet;
             if(filter != null)
             {
                 query= query.Where(filter);
+            }
+            if(includeProperty != null)
+            {
+                foreach(var item in includeProperty.Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query=query.Include(item);
+                }
             }
             return query.ToListAsync();
         }

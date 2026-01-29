@@ -4,9 +4,9 @@ namespace Magic_villa.Repository.IRepository
 {
     public interface Repository<T> where T : class
     {
-        Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null);
+        Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null,string? includeProperty=null);
 
-        Task<T?> Get(Expression<Func<T, bool>> filter, bool track = true);
+        Task<T?> Get(Expression<Func<T, bool>> filter, bool track = true, string? includeProperty = null);
 
         Task Create(T entity);
 

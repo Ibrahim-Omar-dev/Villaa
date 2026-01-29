@@ -3,6 +3,7 @@ using System;
 using Magic_villa.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Magic_villa.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260127115750_EditImage")]
+    partial class EditImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,35 +24,6 @@ namespace Magic_villa.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Magic_villa.Model.LocalUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LocalUsers");
-                });
 
             modelBuilder.Entity("Magic_villa.Model.Villa", b =>
                 {
@@ -102,7 +76,7 @@ namespace Magic_villa.Migrations
                             Amenity = "Pool, WiFi, Breakfast",
                             CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Details = "A luxurious villa with stunning views.",
-                            ImageUrl = "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800",
+                            ImageUrl = "https://dotnetmastery.com/bluevillaimage/villa1.jpg",
                             Name = "Royal Villa",
                             Occupancy = 4,
                             Rate = 250.0,
@@ -115,7 +89,7 @@ namespace Magic_villa.Migrations
                             Amenity = "Private Pool, Gym, WiFi",
                             CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Details = "Spacious villa with a private pool.",
-                            ImageUrl = "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800",
+                            ImageUrl = "https://dotnetmastery.com/bluevillaimage/villa2.jpg",
                             Name = "Premium Pool Villa",
                             Occupancy = 5,
                             Rate = 300.0,
