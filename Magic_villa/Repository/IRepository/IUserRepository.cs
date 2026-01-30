@@ -5,9 +5,9 @@ namespace Magic_villa.Repository.IRepository
 {
     public interface IUserRepository 
     {
-        bool IsUniqueUser(string userName);
+        Task<bool> IsUniqueUser(string UserName);
 
         Task<ResponseLoginDto> Login(RequestLoginDto requestLoginDto);
-        Task<LocalUser> Registration(RequestRgisterationDto requestRgisterationDto);
+        Task<UserDto> Registration(RequestRgisterationDto requestRgisterationDto);
     }
 }

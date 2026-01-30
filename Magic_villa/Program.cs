@@ -1,33 +1,43 @@
 using Magic_villa.Data;
 using Magic_villa.Mapping;
+using Magic_villa.Model;
 using Magic_villa.Repository;
 using Magic_villa.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// ===================== DbContext =====================
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// ===================== AutoMapper =====================
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
-// ===================== Repositories =====================
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-// ===================== Controllers =====================
-builder.Services.AddControllers();
+builder.Services.AddResponseCaching();
 
-// ===================== API Versioning =====================
+builder.Services.AddControllers(option=>
+{
+    option.CacheProfiles.Add("Default30",
+        new CacheProfile()
+        {
+            Duration = 30
+        });
+});
+
 builder.Services.AddApiVersioning(options =>
 {
     options.AssumeDefaultVersionWhenUnspecified = true;
@@ -41,7 +51,6 @@ builder.Services.AddVersionedApiExplorer(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
-// ===================== Swagger =====================
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -69,14 +78,12 @@ builder.Services.AddSwaggerGen(options =>
 
         if (versions == null || !versions.Any())
         {
-            // Include version-neutral endpoints
             return methodInfo.DeclaringType?
                 .GetCustomAttributes(true)
                 .OfType<ApiVersionNeutralAttribute>()
                 .Any() ?? false;
         }
 
-        // Match docName (v1, v2) with version (1.0, 2.0)
         return versions.Any(v => $"v{v.MajorVersion}" == docName);
     });
 
@@ -105,7 +112,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// ===================== JWT =====================
 var key = builder.Configuration["Token:Key"]
           ?? throw new Exception("JWT key is missing");
 
@@ -128,7 +134,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// ===================== Serilog =====================
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.File("logs/magic_villa_log.txt", rollingInterval: RollingInterval.Day)
@@ -138,7 +143,6 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-// ===================== Middleware =====================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

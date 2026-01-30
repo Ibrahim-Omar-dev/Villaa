@@ -39,14 +39,19 @@ namespace Magic_villa.Repository
             return query.FirstOrDefaultAsync(filter);
         }
         //ex includeProperty : Villa , VillaSpecial
-        public Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperty=null)
+        public Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperty=null,
+            int pageNumber=1,int pageSize=0)
         {
             IQueryable<T> query = _dbSet;
             if(filter != null)
             {
                 query= query.Where(filter);
             }
-            if(includeProperty != null)
+            if(pageNumber > 0)
+            {
+                query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            }
+            if (includeProperty != null)
             {
                 foreach(var item in includeProperty.Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries))
                 {

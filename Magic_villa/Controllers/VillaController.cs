@@ -2,7 +2,6 @@
 using Magic_villa.Model;
 using Magic_villa.Model.Dto.VillaDto;
 using Magic_villa.Repository.IRepository;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -30,13 +29,34 @@ namespace Magic_villa.Controllers
         //[Authorize]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetVillas()
+        [ResponseCache(CacheProfileName = "Default30", Location = ResponseCacheLocation.Client)]
+        public async Task<ActionResult<ApiResponse>> GetVillas([FromQuery(Name = "filterOccupancy")] int? occupancy,
+            [FromQuery(Name = "Search By Name")] string? key, int pageNumber=1, int pageSize=2)
         {
             try
             {
+                IEnumerable<Villa> villList;
+                if(occupancy > 0)
+                {
+                    villList=await _unitOfWork.Villa.GetAll(u=>u.Occupancy == occupancy,pageNumber:pageNumber,pageSize:pageSize);
+                }
+                else
+                {
+                    villList = await _unitOfWork.Villa.GetAll(pageNumber: pageNumber, pageSize: pageSize);
+                }
+                if(!string.IsNullOrEmpty(key))
+                {
+                    key = key.ToLower();
+                    villList = villList.Where(u => u.Name.ToLower().Contains(key));
+                }
                 _logger.LogInformation("Getting all villas");
-                var villas = await _unitOfWork.Villa.GetAll();
-                _apiResponse.Result = _mapper.Map<List<VillaDto>>(villas);
+                Pagination pagination = new()
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                };
+                Response.Headers.Add("X-Pagination", System.Text.Json.JsonSerializer.Serialize(pagination));
+                _apiResponse.Result = _mapper.Map<List<VillaDto>>(villList);
                 _apiResponse.StatusCodes = HttpStatusCode.OK;
                 _apiResponse.IsSuccess = true;
                 return Ok(_apiResponse);

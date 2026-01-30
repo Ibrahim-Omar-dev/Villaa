@@ -3,6 +3,6 @@
     public class ResponseLoginDto
     {
         public string Token { get; set; }
-        public LocalUser LocalUser { get; set; }
+        public UserDto User { get; set; }
     }
 }
